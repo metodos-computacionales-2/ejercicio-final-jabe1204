@@ -38,33 +38,32 @@ Pendulum::~Pendulum()
 void initial_conditions(Pendulum & p);
 void euler_cromer(Pendulum & p,double dt,double t);
 
-
 int main(int argc, char** argv)
 {
-    Pendulum p;
-    double t=0.0;//Time 
-    double t_m = 0.0;
-    int n_pasos =1000;
-    int N = atoi(argv[1]);//steps of evolution
-    // intialization
-    initial_conditions(p);
-    double deltaF = (1.5 -p.Fd)/n_pasos;
-    for (int i=1; i<=n_pasos; i++)
-    {
-        for(int j = 1; j<=N;j++)
-        {
-            euler_cromer(p,dt,t);
-            t+=dt;
-            t_m+=dt;
-            if(t_m> 3*M_PI)
-            {
-                t_m = 0;
-                std::cout << p.Theta << "\t" << p.Fd << "\t" << t << std::endl;
-            }
-           
-        }
-         p.Fd += deltaF;
-    }
+  Pendulum p;
+  double t=0.0;//Time 
+  double t_m=0.0;
+  double F = p.Fd;
+  int N = atoi(argv[1]);//steps of evolution
+  // intialization
+  initial_conditions(p);
+  
+  for (int i=1; i<=N; i++)
+  {
+      double deltaF = (F-p.Fd)/N;
+      for (int j=1; j<=N; j++)
+      {
+          euler_cromer(p,dt,t);
+          t+=dt;
+          t_m+=dt; 
+          if(t_m>3*M_PI)
+          {
+              t_m = 0;
+              std::cout << p.Theta << "\t" << p.Fd << "\t" << t <<std::endl;
+          }
+      }
+    p.Fd += deltaF;
+  }
   return 0;
 }
 
@@ -88,7 +87,7 @@ void euler_cromer(Pendulum & p,double dt,double t)
 void initial_conditions(Pendulum & p)
 {
   p.q=0.5;
-  p.Fd=1.5;
+  p.Fd=1.424;
   p.Omega=0.666;
   p.L=G;
   p.W=0.0;
